@@ -24,6 +24,11 @@ public class EntryController {
         return "123";
     }
 
+    //测试操作
+    public String test(String a){
+        return a;
+    }
+
     @RequestMapping("/list")
     public String list(@RequestParam(required = false,defaultValue = "0") long categoryId , @RequestParam(required = false) Integer currPageNo, Model model){
         List<Category> categoryList = entryService.getAllCategoryName();
