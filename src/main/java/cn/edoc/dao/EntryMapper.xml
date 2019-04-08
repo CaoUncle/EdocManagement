@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edoc.dao.EntryMapper">
+    <resultMap id="entryMap" type="cn.edoc.entity.Entry">
+
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="summary" column="summary"/>
+        <result property="uploaduser" column="uploaduser"/>
+        <result property="createDate" column="createdate"/>
+        
+        <association property="category" javaType="Category" column="categoryId">
+            <result property="name" column="name"/>
+         </association>
+        
+    </resultMap>
+
+
+    <select id="getEntryByCategoryId" resultMap="entryMap">
+      select e.*,c.name from edoc_entry e,edoc_category c where e.categoryId = c.id
+        <if test="categoryId != null and categoryId != ''">
+            and categoryId = #{categoryId}
+        </if>
+        ORDER BY e.id DESC
+        <if test="startPos != null and endPos != null">
+            limit #{startPos},#{endPos}
+        </if>
+    </select>
+
+    <select id="getEntryById" resultType="Entry">
+        select e.*,c.name from edoc_entry e,edoc_category c where e.categoryId = c.id
+        <if test="id != null and id != ''">
+            and e.id = #{id}
+        </if>
+    </select>
+
+
+    <select id="getAllCategoryName" resultType="Category">
+        SELECT * FROM edoc_category
+    </select>
+
+
+    <delete id="delEntryById" parameterType="java.lang.Long">
+        delete from edoc_entry where id = #{id}
+    </delete>
+
+
+    <select id="getEntryTotalCount" resultType="java.lang.Integer">
+        select count(1) from edoc_entry where 1 = 1
+        <if test="categoryId != null and categoryId != ''">
+            and categoryId = #{categoryId}
+        </if>
+    </select>
+
+
+    <insert id="addEntry" parameterType="Entry">
+        INSERT INTO `edoc_entry`(`categoryId`,`title`,`summary`,`uploaduser`)
+        VALUES(#{category.id},#{title},#{summary},#{uploaduser})
+    </insert>
+
+
+    <update id="updateEntry" parameterType="Entry">
+        UPDATE
+            `edoc`.`edoc_entry`
+        SET
+            `categoryId` = #{category.id},
+            `title` = #{title},
+            `summary` = #{summary},
+            `uploaduser` = #{uploaduser}
+        WHERE `id` = #{id}
+    </update>
+</mapper>
