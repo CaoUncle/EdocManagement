@@ -18,6 +18,12 @@ public class EntryController {
     @Resource
     private EntryService entryService;
 
+
+    //修改操作
+    public String kk(){
+        return "123";
+    }
+
     @RequestMapping("/list")
     public String list(@RequestParam(required = false,defaultValue = "0") long categoryId , @RequestParam(required = false) Integer currPageNo, Model model){
         List<Category> categoryList = entryService.getAllCategoryName();
